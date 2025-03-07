@@ -1,6 +1,8 @@
 package com.agrovolve.agro_volve.Service;
 import java.util.*;
 
+import com.agrovolve.agro_volve.Model.User;
+
 public interface UserService {
     
     public void AddUser(User user);

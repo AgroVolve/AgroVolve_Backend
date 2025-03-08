@@ -15,13 +15,13 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
+
 
 @Entity
 @Table(name = "users",uniqueConstraints = {
     @UniqueConstraint(columnNames = {"email","phone"})
 })
-public class User implements  UserDetailsService {
+public class User  {
    
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)

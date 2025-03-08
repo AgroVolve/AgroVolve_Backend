@@ -25,7 +25,7 @@ public class User  {
    
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
-private int userId;
+private long  userId;
 
 @NotBlank(message = "user name is required")
 @Column(name = "user_name")

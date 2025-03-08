@@ -3,10 +3,12 @@ package com.agrovolve.agro_volve.serviceImpl;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.agrovolve.agro_volve.Repository.UserRepository;
 import com.agrovolve.agro_volve.Service.AuthService;
 
+@Service
 public class AuthServiceImpl implements AuthService {
 
     

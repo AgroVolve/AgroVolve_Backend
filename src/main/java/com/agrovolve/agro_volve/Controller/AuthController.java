@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.agrovolve.agro_volve.Dto.LoginDto;
-import com.agrovolve.agro_volve.Model.User;
-import com.agrovolve.agro_volve.Service.AuthService;
 import com.agrovolve.agro_volve.serviceImpl.AuthServiceImpl;
 
 @RestController()

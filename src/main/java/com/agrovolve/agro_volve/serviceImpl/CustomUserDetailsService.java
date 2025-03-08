@@ -12,15 +12,15 @@ import com.agrovolve.agro_volve.Repository.UserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    
+
 
     @Autowired
     private UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
-        // Find user by email and throw exception if not found
-        User user = userRepository.findUserByEmail(userEmail)
+        
+        User user = userRepository.findByUserEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + userEmail));
 
         return new CustomUserDetails(user);

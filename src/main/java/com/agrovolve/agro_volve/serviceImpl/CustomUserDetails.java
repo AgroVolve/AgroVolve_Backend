@@ -11,42 +11,29 @@ public class CustomUserDetails implements UserDetails {
 
     private String email;
     private String password;
-   
-  
 
     public CustomUserDetails(User user) {
 
         this.email = user.getUserEmail();
         this.password = user.getUserPassword();
-      
-        
+
     }
-    
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-       return null;
+        return null;
     }
 
     @Override
     public String getPassword() {
-         return this.password;
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
     }
 
 
     
-
-
-
-    @Override
-    public String getUsername() {
-       return  this.email;
-    }
-
-
-   
-
-   
-
 }
-

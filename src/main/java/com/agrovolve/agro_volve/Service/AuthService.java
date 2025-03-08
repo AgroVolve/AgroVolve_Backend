@@ -1,11 +1,14 @@
 package com.agrovolve.agro_volve.Service;
 
+import com.agrovolve.agro_volve.Dto.LoginDto;
+import com.agrovolve.agro_volve.Dto.RegisterDto;
+
 public interface AuthService {
     
 
-    public void registerUser();
-    public void loginUser();
-    public void logoutrUser();
+    public String registerUser(RegisterDto registerDto);
+    public String loginUser(LoginDto loginDto);
+    public String logoutrUser();
     
 
 

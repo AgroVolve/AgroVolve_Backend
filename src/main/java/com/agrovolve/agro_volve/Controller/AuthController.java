@@ -1,58 +1,45 @@
-    package com.agrovolve.agro_volve.Controller;
+package com.agrovolve.agro_volve.Controller;
 
-    
-    import org.springframework.beans.factory.annotation.Autowired;
-    import org.springframework.security.authentication.AuthenticationManager;
-   
-    import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-    import org.springframework.security.core.Authentication;
-    import org.springframework.security.core.userdetails.UsernameNotFoundException;
-    import org.springframework.web.bind.annotation.GetMapping;
-    import org.springframework.web.bind.annotation.PostMapping;
-    import org.springframework.web.bind.annotation.RequestBody;
-    import org.springframework.web.bind.annotation.RequestMapping;
-    import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-    import com.agrovolve.agro_volve.Dto.LoginDto;
-       import com.agrovolve.agro_volve.serviceImpl.JwtService;
+import com.agrovolve.agro_volve.Dto.LoginDto;
+import com.agrovolve.agro_volve.Dto.RegisterDto;
+import com.agrovolve.agro_volve.serviceImpl.AuthServiceImpl;
 
-    @RestController()
-    @RequestMapping("agro-volve/api/v1/auth")
-    public class AuthController {
 
-        // @Autowired
-        // private AuthServiceImpl authServiceImpl;
+@RestController()
+@RequestMapping("agro-volve/api/v1/auth")
+public class AuthController {
 
-        @Autowired
-        private AuthenticationManager authenticationManager;
+    @Autowired
+    private AuthServiceImpl authServiceImpl;
 
-        @Autowired
-        private JwtService jwtService;
+    @PostMapping("/register")
+    public String registerUser(@RequestBody RegisterDto registerDto) {
 
-        public void registerUser() {
+        authServiceImpl.registerUser(registerDto);
 
-        }
+        return "user registered successfully";
+    }
 
-        @PostMapping("/login")
-        public String login(@RequestBody LoginDto loginDto) {
+    @PostMapping("/login")
+    public String login(LoginDto loginDto) {
 
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginDto.getUserEmail(), loginDto.getUserPassword())
-
-            );
-
-            if (authentication.isAuthenticated()) {
-
-                return jwtService.generateTOken(loginDto.getUserEmail());
-            } else {
-                throw new UsernameNotFoundException("Invalid username");
-            }
-
-        }
-
-        @GetMapping("/welcome")
-        public String welcome() {
-            return "This is not protected";
-        }
+        authServiceImpl.loginUser(loginDto);
+        return "user logged successfully";
 
     }
+
+    @GetMapping("/welcome")
+    public String welcome() {
+        return "This is not protected";
+    }
+
+}
+
+

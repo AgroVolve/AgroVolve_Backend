@@ -1,37 +1,75 @@
-package com.agrovolve.agro_volve.serviceImpl;
+    package com.agrovolve.agro_volve.serviceImpl;
+
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.security.authentication.AuthenticationManager;
+    import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+    import org.springframework.security.core.Authentication;
+    import org.springframework.security.core.userdetails.UsernameNotFoundException;
+    import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+    import org.springframework.stereotype.Service;
+
+    import com.agrovolve.agro_volve.Dto.LoginDto;
+    import com.agrovolve.agro_volve.Dto.RegisterDto;
+    import com.agrovolve.agro_volve.Model.User;
+    import com.agrovolve.agro_volve.Repository.UserRepository;
+    import com.agrovolve.agro_volve.Service.AuthService;
+
+    @Service
+    public class AuthServiceImpl implements AuthService {
+
+        @Autowired
+        UserRepository userRepository;
+
+
+       private  BCryptPasswordEncoder passwordEncoder;
+
+        @Autowired
+        private AuthenticationManager authenticationManager;
+
+        @Autowired
+        private JwtService jwtService;
 
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+        @Override
+        public String registerUser(RegisterDto registerDto) {
+        
+            if (userRepository.findByUserEmail(registerDto.getUserEmail()).isPresent()) {
+                return "Email is already exist";
+            }
 
-import com.agrovolve.agro_volve.Repository.UserRepository;
-import com.agrovolve.agro_volve.Service.AuthService;
+            String hashedPassword = passwordEncoder.encode(registerDto.getUserPassword());
 
-@Service
-public class AuthServiceImpl implements AuthService {
+            User user = new User();
+            user.setUserName(registerDto.getUserName());
+            user.setUserEmail(registerDto.getUserEmail());
+            user.setUserPassword(hashedPassword);
 
-    
+            userRepository.save(user);
 
-    @Autowired
-    UserRepository userRepository;
+            return "User registered successfully";
+        }
 
-    @Override
-    public void registerUser() {
-      //logic
+        @Override
+        public String loginUser(LoginDto loginDto) {
 
+        
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginDto.getUserEmail(), loginDto.getUserPassword())
+
+            );
+
+            if (authentication.isAuthenticated()) {
+
+                return jwtService.generateTOken(loginDto.getUserEmail());
+            } else {
+                throw new UsernameNotFoundException("Invalid username");
+            }
+
+        }
+
+        @Override
+        public String logoutrUser() {
+            return "Logout here";
+        }
     }
-
-    @Override
-    public void loginUser() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'loginUser'");
-    }
-
-    @Override
-    public void logoutrUser() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'logoutrUser'");
-    }
-    
-}

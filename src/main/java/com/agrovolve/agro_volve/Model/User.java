@@ -32,17 +32,17 @@ public class User<UserAddress>  {
 private long  userId;
 
 @NotBlank(message = "user name is required")
-@Column(name = "user_name")
+@Column(name = "user_name",length = 255,nullable = false)
 private String userName;
 
 
 @NotBlank(message = "user email is required")
-@Column(name = "user_email")
+@Column(name = "user_email",length = 255,nullable = false)
 @Email(message = "must me email")
 private String userEmail;
 
 @NotBlank(message = "user password is required")
-@Column(name = "user_password")
+@Column(name = "user_password",length = 255,nullable = false)
 private String userPassword;
 
 @Embedded

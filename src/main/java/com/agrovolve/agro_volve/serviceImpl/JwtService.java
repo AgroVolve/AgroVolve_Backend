@@ -20,9 +20,8 @@ import io.jsonwebtoken.security.Keys;
 
     public static final String jwt_secrete_key = "this_is_my_secrete";
 
-    public String generateTOken(Map<String, Object> claims, String userName) {
-        return Jwts.builder()
-                .setClaims(claims)
+    public String generateTOken(String userName) {
+        return Jwts.builder()                
                 .setSubject(userName)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))

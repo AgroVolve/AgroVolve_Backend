@@ -6,9 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Embeddable
-// @Setter
-// @Getter
-class UserAddress {
+@Setter
+@Getter
+class Address {
 
  private String district;
  private String sector;

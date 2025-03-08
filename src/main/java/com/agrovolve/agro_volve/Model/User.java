@@ -1,7 +1,9 @@
 package com.agrovolve.agro_volve.Model;
 
 
-import com.agrovolve.agro_volve.classes.UserContact;
+import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails.Address;
+
+import com.agrovolve.agro_volve.classes.Contact;
 
 
 import jakarta.persistence.Column;
@@ -44,10 +46,10 @@ private String userEmail;
 private String userPassword;
 
 @Embedded
-private UserAddress address;
+private Address address;
 
 @Embedded
-private UserContact contact;
+private Contact contact;
 
 
 

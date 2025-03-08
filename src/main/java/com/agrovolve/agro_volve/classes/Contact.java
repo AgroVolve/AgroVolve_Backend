@@ -8,7 +8,7 @@ import lombok.Setter;
 @Embeddable
 @Setter
 @Getter
-public class UserContact {
+public class Contact {
 
  private int phone;
  private String  alternateEmail;

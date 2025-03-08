@@ -17,6 +17,10 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 
@@ -25,7 +29,11 @@ import jakarta.validation.constraints.NotBlank;
 @Table(name = "users",uniqueConstraints = {
     @UniqueConstraint(columnNames = {"email","phone"})
 })
-public class User<UserAddress>  {
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class User  {
    
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,6 +58,8 @@ private Address address;
 
 @Embedded
 private Contact contact;
+
+
 
 
 

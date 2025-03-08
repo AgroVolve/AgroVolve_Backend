@@ -1,13 +1,23 @@
 package com.agrovolve.agro_volve.serviceImpl;
 
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.agrovolve.agro_volve.Repository.UserRepository;
 import com.agrovolve.agro_volve.Service.AuthService;
 
 public class AuthServiceImpl implements AuthService {
 
+    
+
+    @Autowired
+    UserRepository userRepository;
+
     @Override
     public void registerUser() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'registerUser'");
+      //logic
+
     }
 
     @Override

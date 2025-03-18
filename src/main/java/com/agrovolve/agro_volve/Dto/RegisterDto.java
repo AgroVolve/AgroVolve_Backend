@@ -23,4 +23,10 @@ public class RegisterDto {
     @NotBlank(message = "User password is required.")
     @Size(min = 6, message = "Password must be at least 6 characters long.")
     private String userPassword;
+
+    @Override
+    public String toString() {
+        return "RegisterDto [userName=" + userName + ", userEmail=" + userEmail + ", userPassword=" + userPassword
+                + "]";
+    }
 }

@@ -1,4 +1,3 @@
-
 package com.agrovolve.agro_volve.serviceImpl;
 
 import java.security.Key;
@@ -11,34 +10,27 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 @Component
-  public class JwtService {
+public class JwtService {
 
-    public static final String jwt_secrete_key = "this_is_my_secrete";
+    private final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    public String generateTOken(String userName) {
-        return Jwts.builder()                
+    public String generateToken(String userName) {
+        return Jwts.builder()
                 .setSubject(userName)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
-                .signWith(getSignKey(), SignatureAlgorithm.ES256)
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30)) // 30 minutes
+                .signWith(secretKey, SignatureAlgorithm.HS256) // Use HS256
                 .compact();
-    }
-
-    private Key getSignKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(jwt_secrete_key);
-        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-
-     public Date extractExpiration(String token) {
+    public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
@@ -48,24 +40,19 @@ import io.jsonwebtoken.security.Keys;
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
-
 
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
-
-
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
-
-
-    
-
-
-
 }

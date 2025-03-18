@@ -5,11 +5,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.agrovolve.agro_volve.Dto.LoginDto;
+import com.agrovolve.agro_volve.Dto.LoginResponseDto;
 import com.agrovolve.agro_volve.Dto.RegisterDto;
 import com.agrovolve.agro_volve.Model.User;
 import com.agrovolve.agro_volve.Repository.UserRepository;
@@ -18,23 +18,26 @@ import com.agrovolve.agro_volve.Service.AuthService;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     @Autowired
-  private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtService jwtService;
+    public AuthServiceImpl(UserRepository userRepository,
+                           PasswordEncoder passwordEncoder,
+                           AuthenticationManager authenticationManager,
+                           JwtService jwtService) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
+    }
 
     @Override
     public String registerUser(RegisterDto registerDto) {
-
         if (userRepository.findByUserEmail(registerDto.getUserEmail()).isPresent()) {
-            return "Email is already exist";
+            return "Email already exists";
         }
 
         String hashedPassword = passwordEncoder.encode(registerDto.getUserPassword());
@@ -50,24 +53,31 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String loginUser(LoginDto loginDto) {
+    public LoginResponseDto loginUser(LoginDto loginDto) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                    loginDto.getUserEmail(),
+                    loginDto.getUserPassword()
+                )
+            );
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginDto.getUserEmail(), loginDto.getUserPassword())
+            if (authentication.isAuthenticated()) {
+                User user = userRepository.findByUserEmail(loginDto.getUserEmail())
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        );
-
-        if (authentication.isAuthenticated()) {
-
-            return jwtService.generateToken(loginDto.getUserEmail());
-        } else {
-            throw new UsernameNotFoundException("Invalid username");
+                String token = jwtService.generateToken(loginDto.getUserEmail());
+                return new LoginResponseDto(token, user.getUserName(), user.getUserEmail());
+            } 
+        } catch (Exception e) {
+            throw new UsernameNotFoundException("Invalid username or password");
         }
 
+        throw new UsernameNotFoundException("Invalid username or password");
     }
 
     @Override
     public String logoutrUser() {
-        return "Logout here";
+        return "Logout successful";
     }
 }

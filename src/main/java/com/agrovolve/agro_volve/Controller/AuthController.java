@@ -40,7 +40,7 @@ public class AuthController {
 
     @PostMapping("/forgot-password")
     public ResponseEntity<String> forgotPassword(@RequestParam String email) {
-        AuthServiceImpl.requestPasswordReset(email);
+        authServiceImpl.requestPasswordReset(email); 
         return ResponseEntity.ok("Password reset link sent to email");
     }
 
@@ -48,9 +48,10 @@ public class AuthController {
     public ResponseEntity<String> resetPassword(
             @RequestParam String token,
             @RequestParam String newPassword) {
-        AuthServiceImpl.resetPasword(token, newPassword);
+        authServiceImpl.resetPasword(token, newPassword); 
         return ResponseEntity.ok("Password reset successful");
     }
+
 
     @PostMapping("/greet")
     public ResponseEntity<String> greet(@RequestBody RegisterDto registerDto) {

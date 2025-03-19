@@ -16,7 +16,6 @@ import com.agrovolve.agro_volve.Dto.RegisterDto;
 import com.agrovolve.agro_volve.Model.User;
 import com.agrovolve.agro_volve.Repository.UserRepository;
 import com.agrovolve.agro_volve.Service.AuthService;
-import com.agrovolve.agro_volve.classes.MailService;
 
 @Service
 public class AuthServiceImpl implements AuthService {

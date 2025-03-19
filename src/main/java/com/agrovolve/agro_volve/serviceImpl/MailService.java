@@ -1,4 +1,4 @@
-package com.agrovolve.agro_volve.classes;
+package com.agrovolve.agro_volve.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -21,7 +21,7 @@ public class MailService {
 
             helper.setTo(to);
             helper.setSubject(subject);
-            helper.setText(body, true); // true enables HTML content
+            helper.setText(body, true); 
 
             mailSender.send(message);
             System.out.println("Mail sent successfully!");

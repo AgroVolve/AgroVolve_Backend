@@ -38,6 +38,9 @@ public class AuthController {
         return ResponseEntity.ok("This is not protected");
     }
 
+    // @PostMapping("/forgot-password")
+    // public void get
+
     @PostMapping("/greet")
     public ResponseEntity<String> greet(@RequestBody RegisterDto registerDto) {
         System.out.println("Request received: " + registerDto);

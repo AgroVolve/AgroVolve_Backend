@@ -59,6 +59,29 @@ private Address address;
 @Embedded
 private Contact contact;
 
+@Embedded 
+private ResetToken resetToken;
+
+
+public void createResetToken(String token) {
+    if (resetToken == null) {
+        resetToken = new ResetToken();
+    }
+    resetToken.generateResetToken(token, 10); 
+}
+
+
+public boolean isResetTokenValid(String token) {
+    return resetToken != null && resetToken.isTokenValid(token);
+}
+
+public void clearResetToken() {
+    if (resetToken != null) {
+        resetToken.clearToken();
+    }
+}
+
+
 
 
 

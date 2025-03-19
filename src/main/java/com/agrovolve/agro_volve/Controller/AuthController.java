@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.agrovolve.agro_volve.Dto.ForgotPasswordRequest;
 import com.agrovolve.agro_volve.Dto.LoginDto;
 import com.agrovolve.agro_volve.Dto.LoginResponseDto;
 import com.agrovolve.agro_volve.Dto.RegisterDto;
@@ -38,11 +39,14 @@ public class AuthController {
         return ResponseEntity.ok("This is not protected");
     }
 
-    @PostMapping("/forgot-password")
-    public ResponseEntity<String> forgotPassword(@RequestParam String email) {
-        authServiceImpl.requestPasswordReset(email); 
-        return ResponseEntity.ok("Password reset link sent to email");
-    }
+    
+   @PostMapping("/forgot-password")
+public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+    authServiceImpl.requestPasswordReset(request.getUserEmail());
+    return ResponseEntity.ok("Password reset link sent to email");
+}
+
+
 
     @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(

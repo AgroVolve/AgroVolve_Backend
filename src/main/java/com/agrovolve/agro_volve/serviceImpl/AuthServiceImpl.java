@@ -1,5 +1,7 @@
 package com.agrovolve.agro_volve.serviceImpl;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,11 +25,12 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
+    
     @Autowired
     public AuthServiceImpl(UserRepository userRepository,
-                           PasswordEncoder passwordEncoder,
-                           AuthenticationManager authenticationManager,
-                           JwtService jwtService) {
+            PasswordEncoder passwordEncoder,
+            AuthenticationManager authenticationManager,
+            JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
@@ -56,11 +59,9 @@ public class AuthServiceImpl implements AuthService {
     public LoginResponseDto loginUser(LoginDto loginDto) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                    loginDto.getUserEmail(),
-                    loginDto.getUserPassword()
-                )
-            );
+                    new UsernamePasswordAuthenticationToken(
+                            loginDto.getUserEmail(),
+                            loginDto.getUserPassword()));
 
             if (authentication.isAuthenticated()) {
                 User user = userRepository.findByUserEmail(loginDto.getUserEmail())
@@ -68,7 +69,7 @@ public class AuthServiceImpl implements AuthService {
 
                 String token = jwtService.generateToken(loginDto.getUserEmail());
                 return new LoginResponseDto(token, user.getUserName(), user.getUserEmail());
-            } 
+            }
         } catch (Exception e) {
             throw new UsernameNotFoundException("Invalid username or password");
         }
@@ -80,4 +81,45 @@ public class AuthServiceImpl implements AuthService {
     public String logoutrUser() {
         return "Logout successful";
     }
+
+
+    @Override
+    public void requestPasswordReset(String email) {
+        
+         User user = userRepository.findByUserEmail(email)
+         .orElseThrow(()-> new RuntimeException("User not FOund"));
+
+         String resetTOken= UUID.randomUUID().toString();
+
+          user.createResetToken(resetTOken);
+
+          userRepository.save(user);
+
+          sendEmail(email);
+
+
+    }
+    
+    
+private void sendEmail(String email){
+
+}
+
+@Override
+public void resetPasword(String token, String newPassword) {
+    User user = userRepository.findByResetToken(token)
+            .orElseThrow(() -> new RuntimeException("Invalid or expired token"));
+
+    if (user.getResetToken() < System.currentTimeMillis()) {
+        throw new RuntimeException("Token has expired");
+    }
+
+    
+    user.setUserPassword(passwordEncoder.encode(newPassword));
+    user.setResetToken(null);
+    user.setExpiresAt(null);
+
+    userRepository.save(user);
+}
+
 }

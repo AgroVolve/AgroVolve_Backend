@@ -10,6 +10,8 @@ public interface AuthService {
     public String registerUser(RegisterDto registerDto);
     public LoginResponseDto loginUser(LoginDto loginDto);
     public String logoutrUser();
+    public void requestPasswordReset(String email);
+    public  void resetPasword(String token, String newPassword);
     
 
 

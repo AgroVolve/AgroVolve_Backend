@@ -1,9 +1,16 @@
-package com.agrovolve.agro_volve.Model;
+package com.agrovolve.agro_volve.classes;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.Instant;
 
 @Embeddable
+// @Data
+// @Getter
+// @Setter
 public class ResetToken {
 
     @Column(name = "reset_token", length = 255)
@@ -24,6 +31,16 @@ public class ResetToken {
     }
 
 
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+
+    public void setExpiresAt(Instant expiresAt) {
+        this.expiresAt = expiresAt;
+    }
+
+
     public void clearToken() {
         this.token = null;
         this.expiresAt = null;
@@ -36,6 +53,7 @@ public class ResetToken {
     public Instant getExpiresAt() {
         return expiresAt;
     }
+
 
 
 }

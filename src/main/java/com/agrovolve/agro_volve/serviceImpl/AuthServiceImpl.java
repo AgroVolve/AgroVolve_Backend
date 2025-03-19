@@ -16,6 +16,7 @@ import com.agrovolve.agro_volve.Dto.RegisterDto;
 import com.agrovolve.agro_volve.Model.User;
 import com.agrovolve.agro_volve.Repository.UserRepository;
 import com.agrovolve.agro_volve.Service.AuthService;
+import com.agrovolve.agro_volve.classes.MailService;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -25,7 +26,8 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    
+    MailService mailService;
+
     @Autowired
     public AuthServiceImpl(UserRepository userRepository,
             PasswordEncoder passwordEncoder,
@@ -82,44 +84,35 @@ public class AuthServiceImpl implements AuthService {
         return "Logout successful";
     }
 
-
     @Override
     public void requestPasswordReset(String email) {
-        
-         User user = userRepository.findByUserEmail(email)
-         .orElseThrow(()-> new RuntimeException("User not FOund"));
 
-         String resetTOken= UUID.randomUUID().toString();
+        User user = userRepository.findByUserEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not FOund"));
 
-          user.createResetToken(resetTOken);
+        String resetTOken = UUID.randomUUID().toString();
 
-          userRepository.save(user);
+        user.createResetToken(resetTOken);
 
-          sendEmail(email);
+        userRepository.save(user);
 
+        mailService.sendEmail(user.getUserEmail(), "Reset Password", "Here is your reset link: ...");
 
     }
-    
-    
-private void sendEmail(String email){
 
-}
+    @Override
+    public void resetPasword(String token, String newPassword) {
+        User user = userRepository.findByResetToken(token)
+                .orElseThrow(() -> new RuntimeException("Invalid or expired token"));
 
-@Override
-public void resetPasword(String token, String newPassword) {
-    User user = userRepository.findByResetToken(token)
-            .orElseThrow(() -> new RuntimeException("Invalid or expired token"));
+        if (!user.isResetTokenValid(token)) {
+            throw new RuntimeException("Invalid or expired token");
+        }
 
-    if (user.getResetToken() < System.currentTimeMillis()) {
-        throw new RuntimeException("Token has expired");
+        user.setUserPassword(passwordEncoder.encode(newPassword));
+        user.clearResetToken();
+
+        userRepository.save(user);
     }
-
-    
-    user.setUserPassword(passwordEncoder.encode(newPassword));
-    user.setResetToken(null);
-    user.setExpiresAt(null);
-
-    userRepository.save(user);
-}
 
 }

@@ -38,8 +38,19 @@ public class AuthController {
         return ResponseEntity.ok("This is not protected");
     }
 
-    // @PostMapping("/forgot-password")
-    // public void get
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestParam String email) {
+        AuthServiceImpl.requestPasswordReset(email);
+        return ResponseEntity.ok("Password reset link sent to email");
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(
+            @RequestParam String token,
+            @RequestParam String newPassword) {
+        AuthServiceImpl.resetPasword(token, newPassword);
+        return ResponseEntity.ok("Password reset successful");
+    }
 
     @PostMapping("/greet")
     public ResponseEntity<String> greet(@RequestBody RegisterDto registerDto) {

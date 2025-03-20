@@ -6,12 +6,15 @@ import com.agrovolve.agro_volve.Dto.RegisterDto;
 
 public interface AuthService {
     
+    //you have to modify all this   
 
     public String registerUser(RegisterDto registerDto);
     public LoginResponseDto loginUser(LoginDto loginDto);
     public String logoutrUser();
     public void requestPasswordReset(String email);
     public  void resetPasword(String token, String newPassword);
+    //the verify code 
+
     
 
 

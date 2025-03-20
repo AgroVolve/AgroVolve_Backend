@@ -34,30 +34,38 @@ public class AuthController {
         return ResponseEntity.ok(response);
   }
 
-    @GetMapping("/welcome")
-    public ResponseEntity<String> welcome() {
-        return ResponseEntity.ok("This is not protected");
+  
+  
+  
+  
+  @PostMapping("/forgot-password")
+  public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+      System.out.println(request);
+      
+      authServiceImpl.requestPasswordReset(request.getUserEmail());
+      return ResponseEntity.ok("Password reset link sent to email");
     }
-
     
-   @PostMapping("/forgot-password")
-public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequest request) {
-    System.out.println(request);
     
-    authServiceImpl.requestPasswordReset(request.getUserEmail());
-    return ResponseEntity.ok("Password reset link sent to email");
-}
-
-
+    //implement   the verify code endpoints
 
     @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(
-            @RequestParam String token,
-            @RequestParam String newPassword) {
+        @RequestParam String token,
+        @RequestParam String newPassword) {
         authServiceImpl.resetPasword(token, newPassword); 
         return ResponseEntity.ok("Password reset successful");
     }
 
+
+
+
+
+
+    @GetMapping("/welcome")
+    public ResponseEntity<String> welcome() {
+        return ResponseEntity.ok("This is not protected");
+    }
 
     @PostMapping("/greet")
     public ResponseEntity<String> greet(@RequestBody RegisterDto registerDto) {

@@ -102,7 +102,12 @@ public class AuthServiceImpl implements AuthService {
 
     }
 
-    @Override
+
+    ///add the service method  to verify code 
+
+
+    //change  this to allow resent of new passowrd only without the token(code) becasue  token have been verified 
+     @Override
     public void resetPasword(String token, String newPassword) {
         User user = userRepository.findByResetToken(token)
                 .orElseThrow(() -> new RuntimeException("Invalid or expired token"));

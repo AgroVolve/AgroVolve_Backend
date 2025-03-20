@@ -19,6 +19,7 @@ class UserServiceImpl implements UserService {
         throw new UnsupportedOperationException("Unimplemented method 'getUserByID'");
     }
 
+    
     @Override
     public List<User> getAllUsers() {
         // TODO Auto-generated method stub

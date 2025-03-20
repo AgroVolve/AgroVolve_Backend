@@ -91,27 +91,35 @@ public class AuthServiceImpl implements AuthService {
 
 
 
-    @Override
-    public void requestPasswordReset(String email) {
-        User user = userRepository.findByUserEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        @Override
+        public void requestPasswordReset(String email) {
+            User user = userRepository.findByUserEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
-        String resetCode = String.valueOf((int) (Math.random() * 99999));
+            String resetCode = String.valueOf((int) (Math.random() * 99999));
 
-        user.createResetToken(resetCode);
-        userRepository.save(user);
+            user.createResetToken(resetCode);
+            userRepository.save(user);
 
-        String userName = user.getUserName();
+            String userName = user.getUserName();
 
-        String body = "<p>Hello " + userName + ",</p>"
-                + "<p>Here is your message from Agrovolve:</p>"
-                + "<p>Please reset your password by using the code below:</p>"
-                + "<p><b>" + resetCode + "</b></p>"
-                + "<p>Thank you,</p>"
-                + "<p>Agrovolve Team</p>";
-        mailService.sendEmail(user.getUserEmail(), "Password Reset Request", body);
+            String body = "<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f9f9f9;\">"
+            + "<h2 style=\"color: #2a9d8f; text-align: center;\">Password Reset Request</h2>"
+            + "<p style=\"font-size: 16px; color: #333;\">Hello <b>" + userName + "</b>,</p>"
+            + "<p style=\"font-size: 16px; color: #333;\">You have requested to reset your password. Please use the code below to reset your password:</p>"
+            + "<div style=\"background-color: #2a9d8f; padding: 10px; border-radius: 5px; margin: 20px 0; text-align: center;\">"
+            + "<span style=\"color: #fff; font-size: 24px; font-weight: bold;\">" + resetCode + "</span>"
+            + "</div>"
+            + "<p style=\"font-size: 16px; color: #333;\">If you did not request a password reset, please ignore this email.</p>"
+            + "<p style=\"font-size: 16px; color: #333;\">Thank you,<br><b>The Agrovolve Team</b></p>"
+            + "<footer style=\"margin-top: 20px; font-size: 12px; color: #999; text-align: center;\">"
+            + "© " + java.time.Year.now().getValue() + " Agrovolve. All rights reserved."
+            + "</footer>"
+            + "</div>";
+            
+            mailService.sendEmail(user.getUserEmail(), "Password Reset Request", body);
 
-    }
+        }
 
     @Override
     public boolean verifyResetCode(String email, String code) {

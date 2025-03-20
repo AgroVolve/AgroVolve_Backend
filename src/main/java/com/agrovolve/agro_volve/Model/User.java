@@ -24,9 +24,10 @@ import lombok.Setter;
 
 
 @Entity
-@Table(name = "users",uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"email","phone"})
+@Table(name = "users", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"user_email", "user_phone"})
 })
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -84,17 +85,6 @@ public void clearResetToken() {
         resetToken.clearToken();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
 
     
 }

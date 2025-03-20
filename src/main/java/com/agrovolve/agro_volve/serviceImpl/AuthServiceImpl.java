@@ -68,14 +68,12 @@ public class AuthServiceImpl implements AuthService {
                             loginDto.getUserPassword()));
     
             if (authentication.isAuthenticated()) {
-                User user = userRepository.findByUserEmail(loginDto.getUserName())
+                User user = userRepository.findByUserName(loginDto.getUserName())
                         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     
                 String token = jwtService.generateToken(loginDto.getUserName());
     
-                
                 return new LoginResponseDto(token, user.getUserName(), user.getUserEmail(), "Login successful");
-                
             }
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException("Invalid username or password");
@@ -85,7 +83,6 @@ public class AuthServiceImpl implements AuthService {
         throw new RuntimeException("Login failed");
     }
     
-
 
 
 

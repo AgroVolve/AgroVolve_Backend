@@ -9,12 +9,12 @@ import com.agrovolve.agro_volve.Model.User;
 
 public class CustomUserDetails implements UserDetails {
 
-    private String email;
+    private String name;
     private String password;
 
     public CustomUserDetails(User user) {
 
-        this.email = user.getUserEmail();
+        this.name = user.getUserName();
         this.password = user.getUserPassword();
 
     }
@@ -31,7 +31,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.email;
+        return this.name;
     }
 
 

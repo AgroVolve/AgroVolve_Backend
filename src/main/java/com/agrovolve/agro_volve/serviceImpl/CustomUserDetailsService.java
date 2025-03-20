@@ -9,22 +9,19 @@ import org.springframework.stereotype.Service;
 import com.agrovolve.agro_volve.Model.User;
 import com.agrovolve.agro_volve.Repository.UserRepository;
 
-
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-
 
     @Autowired
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
-        
-        User user = userRepository.findByUserEmail(userEmail)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + userEmail));
-
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUserName(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return new CustomUserDetails(user);
     }
 }
+
 
 

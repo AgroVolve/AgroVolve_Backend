@@ -1,5 +1,5 @@
 
- package com.agrovolve.agro_volve.classes;
+package com.agrovolve.agro_volve.classes;
 
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
@@ -10,9 +10,8 @@ import lombok.Setter;
 @Getter
 class Address {
 
- private String district;
- private String sector;
- private String village;
+    private String district;
+    private String sector;
+    private String village;
 
-    
 }

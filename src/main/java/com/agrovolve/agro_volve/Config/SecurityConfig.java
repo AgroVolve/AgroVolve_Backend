@@ -40,7 +40,12 @@ public class SecurityConfig {
                         "/agro-volve/api/v1/auth/greet",
                         "/agro-volve/api/v1/auth/reset-password",
                         "/agro-volve/api/v1/auth/forgot-password",
-                        "/agro-volve/api/v1/auth/verify-code"
+                        "/agro-volve/api/v1/auth/verify-code",
+                        "/agro-volve/api/v1/user/get-all-users",
+                        "/agro-volve/api/v1/user/{userId}",
+                        "/agro-volve/api/v1/user/create",
+                        "/agro-volve/api/v1/user/update/{userId}",
+                        "/agro-volve/api/v1/user/delete/{userId}"
                 
 
                     ).permitAll()

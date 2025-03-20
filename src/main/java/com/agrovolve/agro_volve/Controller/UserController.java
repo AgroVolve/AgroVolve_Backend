@@ -68,7 +68,7 @@ public class UserController {
     }
 
    
-    @PutMapping("/{userId}")
+    @PutMapping("/update/{userId}")
     public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestBody UpdateUserDto updateUserDto) {
         try {
             User updatedUser = userService.updateUser(userId, updateUserDto);
@@ -88,7 +88,7 @@ public class UserController {
     }
 
     
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/delete/{userId}")
     public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
         try {
             userService.deleteUser(userId);

@@ -25,4 +25,9 @@ public class CreateUserDto {
     @Column(name = "user_password", length = 255, nullable = false)
     private String userPassword;
 
+
+    @NotBlank(message = "user phone is required")
+    @Column(name = "user_phone", length = 255, nullable = false)
+    private String userPhone;
+
 }

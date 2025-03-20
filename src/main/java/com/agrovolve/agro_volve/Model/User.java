@@ -2,8 +2,6 @@ package com.agrovolve.agro_volve.Model;
 
 
 import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails.Address;
-
-import com.agrovolve.agro_volve.classes.Contact;
 import com.agrovolve.agro_volve.classes.ResetToken;
 
 import jakarta.persistence.Column;

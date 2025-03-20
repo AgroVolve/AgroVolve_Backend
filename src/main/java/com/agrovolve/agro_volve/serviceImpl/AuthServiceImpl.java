@@ -2,6 +2,7 @@ package com.agrovolve.agro_volve.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -42,7 +43,7 @@ public class AuthServiceImpl implements AuthService {
         if (userRepository.findByUserEmail(registerDto.getUserEmail()).isPresent()) {
             return "Email already exists";
         }
-        
+
         String hashedPassword = passwordEncoder.encode(registerDto.getUserPassword());
 
         User user = new User();
@@ -65,19 +66,30 @@ public class AuthServiceImpl implements AuthService {
                     new UsernamePasswordAuthenticationToken(
                             loginDto.getUserEmail(),
                             loginDto.getUserPassword()));
-
+    
             if (authentication.isAuthenticated()) {
                 User user = userRepository.findByUserEmail(loginDto.getUserEmail())
                         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
+    
                 String token = jwtService.generateToken(loginDto.getUserEmail());
-                return new LoginResponseDto(token, user.getUserName(), user.getUserEmail());
+    
+                
+                return new LoginResponseDto(token, user.getUserName(), user.getUserEmail(), "Login successful");
+                
             }
-        } catch (Exception e) {
-            throw new UsernameNotFoundException("Invalid username or password");
+        } catch (BadCredentialsException e) {
+            throw new BadCredentialsException("Invalid username or password");
+        } catch (UsernameNotFoundException e) {
+            throw new UsernameNotFoundException("User not found");
         }
-        return null;
+        throw new RuntimeException("Login failed");
     }
+    
+
+
+
+
+
 
     @Override
     public void requestPasswordReset(String email) {

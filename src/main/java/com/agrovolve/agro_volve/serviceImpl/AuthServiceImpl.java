@@ -1,4 +1,5 @@
 package com.agrovolve.agro_volve.serviceImpl;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,10 +26,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     public AuthServiceImpl(UserRepository userRepository,
-                           PasswordEncoder passwordEncoder,
-                           AuthenticationManager authenticationManager,
-                           JwtService jwtService,
-                           MailService mailService) {
+            PasswordEncoder passwordEncoder,
+            AuthenticationManager authenticationManager,
+            JwtService jwtService,
+            MailService mailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
@@ -41,18 +42,21 @@ public class AuthServiceImpl implements AuthService {
         if (userRepository.findByUserEmail(registerDto.getUserEmail()).isPresent()) {
             return "Email already exists";
         }
-
+        
         String hashedPassword = passwordEncoder.encode(registerDto.getUserPassword());
 
         User user = new User();
         user.setUserName(registerDto.getUserName());
         user.setUserEmail(registerDto.getUserEmail());
         user.setUserPassword(hashedPassword);
+        user.setUserPhone(registerDto.getUserPhone());
 
         userRepository.save(user);
 
         return "User registered successfully";
     }
+
+
 
     @Override
     public LoginResponseDto loginUser(LoginDto loginDto) {
@@ -72,7 +76,7 @@ public class AuthServiceImpl implements AuthService {
         } catch (Exception e) {
             throw new UsernameNotFoundException("Invalid username or password");
         }
-                return null;
+        return null;
     }
 
     @Override
@@ -80,13 +84,21 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByUserEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        String resetCode = String.valueOf((int)(Math.random() * 999999));
+        String resetCode = String.valueOf((int) (Math.random() * 99999));
 
         user.createResetToken(resetCode);
         userRepository.save(user);
 
-        String body = "Your password reset code is: <b>" + resetCode + "</b>";
-        mailService.sendEmail(user.getUserEmail(), "Reset Password", body);
+        String userName = user.getUserName();
+
+        String body = "<p>Hello " + userName + ",</p>"
+                + "<p>Here is your message from Agrovolve:</p>"
+                + "<p>Please reset your password by using the code below:</p>"
+                + "<p><b>" + resetCode + "</b></p>"
+                + "<p>Thank you,</p>"
+                + "<p>Agrovolve Team</p>";
+        mailService.sendEmail(user.getUserEmail(), "Password Reset Request", body);
+
     }
 
     @Override
@@ -109,6 +121,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String logoutrUser() {
-       return "about to log out";
+        return "about to log out";
     }
 }

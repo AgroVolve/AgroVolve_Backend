@@ -53,21 +53,28 @@ private String userEmail;
 @Column(name = "user_password",length = 255,nullable = false)
 private String userPassword;
 
+@NotBlank(message = "user phone is required")
+@Column(name = "user_phone", length = 255, nullable = false)
+private String userPhone;
+
+
 @Embedded
 private Address address;
 
-@Embedded
-private Contact contact;
+// @Embedded
+// private Contact contact;
 
 @Embedded 
 private ResetToken resetToken;
+
+
 
 
 public void createResetToken(String token) {
     if (resetToken == null) {
         resetToken = new ResetToken();
     }
-    resetToken.generateResetToken(token, 10);
+    resetToken.generateResetToken(token, 1);
 }
 
 public boolean isResetTokenValid(String token) {

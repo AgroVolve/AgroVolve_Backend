@@ -1,14 +1,16 @@
         package com.agrovolve.agro_volve.classes;
         import jakarta.persistence.Column;
         import jakarta.persistence.Embeddable;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-
-        import java.time.Instant;
+import java.time.Instant;
 
         @Embeddable
-        // @Data
-        // @Getter
-        // @Setter
+        @Data
+        @Getter
+        @Setter
         public class ResetToken {
 
             @Column(name = "reset_token", length = 255)

@@ -33,6 +33,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginDto loginDto) {
         LoginResponseDto response = authServiceImpl.loginUser(loginDto);
+        
         return ResponseEntity.ok(response);
     }
 
@@ -52,7 +53,7 @@ public class AuthController {
         }
     }
 
-    
+
 
     @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequestDto requestDto) {

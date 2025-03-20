@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
         user.setUserEmail(createUserDto.getUserEmail());
         user.setUserPhone(createUserDto.getUserPhone());
         user.setUserPassword(createUserDto.getUserPassword()); 
-        return userRepository.save(user); // Save new user
+        return userRepository.save(user); 
     }
 
     @Override
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
                 userToUpdate.setUserPhone(updateUserDto.getUserPhone());
             }
             if (updateUserDto.getUserPassword() != null) {
-                userToUpdate.setUserPassword(updateUserDto.getUserPassword()); // Or hashed password
+                userToUpdate.setUserPassword(updateUserDto.getUserPassword()); 
             }
 
             

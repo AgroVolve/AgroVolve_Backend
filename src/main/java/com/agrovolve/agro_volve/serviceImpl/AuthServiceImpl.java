@@ -1,7 +1,4 @@
 package com.agrovolve.agro_volve.serviceImpl;
-
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,22 +21,20 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-
-    MailService mailService;
+    private final MailService mailService;
 
     @Autowired
     public AuthServiceImpl(UserRepository userRepository,
                            PasswordEncoder passwordEncoder,
                            AuthenticationManager authenticationManager,
                            JwtService jwtService,
-                           MailService mailService) { // Add MailService here
+                           MailService mailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
-        this.mailService = mailService; 
+        this.mailService = mailService;
     }
-
 
     @Override
     public String registerUser(RegisterDto registerDto) {
@@ -77,49 +72,43 @@ public class AuthServiceImpl implements AuthService {
         } catch (Exception e) {
             throw new UsernameNotFoundException("Invalid username or password");
         }
-
-        throw new UsernameNotFoundException("Invalid username or password");
-    }
-
-    @Override
-    public String logoutrUser() {
-        return "Logout successful";
+                return null;
     }
 
     @Override
     public void requestPasswordReset(String email) {
-
         User user = userRepository.findByUserEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not FOund"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        String resetTOken = UUID.randomUUID().toString();
+        String resetCode = String.valueOf((int)(Math.random() * 999999));
 
-        user.createResetToken(resetTOken);
-
+        user.createResetToken(resetCode);
         userRepository.save(user);
 
-        mailService.sendEmail(user.getUserEmail(), "Reset Password", "Here is your reset link: ...");
-
+        String body = "Your password reset code is: <b>" + resetCode + "</b>";
+        mailService.sendEmail(user.getUserEmail(), "Reset Password", body);
     }
 
+    @Override
+    public boolean verifyResetCode(String email, String code) {
+        User user = userRepository.findByUserEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-    ///add the service method  to verify code 
+        return user.isResetTokenValid(code);
+    }
 
-
-    //change  this to allow resent of new passowrd only without the token(code) becasue  token have been verified 
-     @Override
-    public void resetPasword(String token, String newPassword) {
-        User user = userRepository.findByResetToken(token)
-                .orElseThrow(() -> new RuntimeException("Invalid or expired token"));
-
-        if (!user.isResetTokenValid(token)) {
-            throw new RuntimeException("Invalid or expired token");
-        }
+    @Override
+    public void resetPassword(String email, String newPassword) {
+        User user = userRepository.findByUserEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         user.setUserPassword(passwordEncoder.encode(newPassword));
         user.clearResetToken();
-
         userRepository.save(user);
     }
 
+    @Override
+    public String logoutrUser() {
+       return "about to log out";
+    }
 }

@@ -53,5 +53,10 @@
             }
 
 
+            public boolean isExpired() {
+                return Instant.now().isAfter(this.expiresAt);
+            }
+
+
 
         }

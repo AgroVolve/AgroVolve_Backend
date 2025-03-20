@@ -22,30 +22,19 @@ private String  fom;
 
     public void sendEmail(String to, String subject, String body) {
         try {
-            System.out.println(from.toString());
-            System.out.println(fom.toString());
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
+    
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(body, true); 
             helper.setFrom(fom);
-
+    
             mailSender.send(message);
             System.out.println("Mail sent successfully!");
-
-        //     SimpleMailMessage simple = new SimpleMailMessage();
-
-        //    simple.setTo(to);
-        //     simple.setSubject(subject);
-        //     simple.setText(body); 
-        //     simple.setFrom(fom);
-
-        //     mailSender.send(simple);
-
         } catch (Exception e) {
             throw new RuntimeException("Failed to send email", e);
         }
     }
+    
 }

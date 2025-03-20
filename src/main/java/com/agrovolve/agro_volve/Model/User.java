@@ -67,12 +67,11 @@ public void createResetToken(String token) {
     if (resetToken == null) {
         resetToken = new ResetToken();
     }
-    resetToken.generateResetToken(token, 10); 
+    resetToken.generateResetToken(token, 10);
 }
 
-
 public boolean isResetTokenValid(String token) {
-    return resetToken != null && resetToken.isTokenValid(token);
+    return resetToken != null && resetToken.getToken().equals(token) && !resetToken.isExpired();
 }
 
 public void clearResetToken() {

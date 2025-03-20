@@ -8,6 +8,8 @@ import com.agrovolve.agro_volve.Dto.ForgotPasswordRequest;
 import com.agrovolve.agro_volve.Dto.LoginDto;
 import com.agrovolve.agro_volve.Dto.LoginResponseDto;
 import com.agrovolve.agro_volve.Dto.RegisterDto;
+import com.agrovolve.agro_volve.Dto.ResetPasswordRequestDto;
+import com.agrovolve.agro_volve.Dto.VerifyCodeRequestDto;
 import com.agrovolve.agro_volve.serviceImpl.AuthServiceImpl;
 
 @RestController
@@ -32,44 +34,36 @@ public class AuthController {
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginDto loginDto) {
         LoginResponseDto response = authServiceImpl.loginUser(loginDto);
         return ResponseEntity.ok(response);
-  }
-
-  
-  
-  
-  
-  @PostMapping("/forgot-password")
-  public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequest request) {
-      System.out.println(request);
-      
-      authServiceImpl.requestPasswordReset(request.getUserEmail());
-      return ResponseEntity.ok("Password reset link sent to email");
     }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        authServiceImpl.requestPasswordReset(request.getUserEmail());
+        return ResponseEntity.ok("Reset code sent to email");
+    }
+
+    @PostMapping("/verify-code")
+    public ResponseEntity<String> verifyCode(@RequestBody VerifyCodeRequestDto requestDto) {
+        boolean isValid = authServiceImpl.verifyResetCode(requestDto.getEmail(), requestDto.getCode());
+        if (isValid) {
+            return ResponseEntity.ok("Code verified successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Invalid or expired code");
+        }
+    }
+
     
-    
-    //implement   the verify code endpoints
 
     @PostMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(
-        @RequestParam String token,
-        @RequestParam String newPassword) {
-        authServiceImpl.resetPasword(token, newPassword); 
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequestDto requestDto) {
+        authServiceImpl.resetPassword(requestDto.getEmail(), requestDto.getNewPassword());
         return ResponseEntity.ok("Password reset successful");
     }
-
-
-
 
 
 
     @GetMapping("/welcome")
     public ResponseEntity<String> welcome() {
         return ResponseEntity.ok("This is not protected");
-    }
-
-    @PostMapping("/greet")
-    public ResponseEntity<String> greet(@RequestBody RegisterDto registerDto) {
-        System.out.println("Request received: " + registerDto);
-        return ResponseEntity.ok("This is a greeting");
     }
 }

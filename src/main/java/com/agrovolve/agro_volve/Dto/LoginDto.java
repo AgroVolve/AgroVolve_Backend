@@ -15,7 +15,7 @@ public class LoginDto {
 
     @NotBlank(message = "User email is required.")
     @Email(message = "Must be a valid email address.")
-    private String userEmail;
+    private String userName;
 
     @NotBlank(message = "User password is required.")
     @Size(min = 6, message = "Password must be at least 6 characters long.")

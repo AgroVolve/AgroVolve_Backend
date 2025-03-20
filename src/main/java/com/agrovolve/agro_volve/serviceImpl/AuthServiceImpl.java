@@ -64,14 +64,14 @@ public class AuthServiceImpl implements AuthService {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            loginDto.getUserEmail(),
+                            loginDto.getUserName(),
                             loginDto.getUserPassword()));
     
             if (authentication.isAuthenticated()) {
-                User user = userRepository.findByUserEmail(loginDto.getUserEmail())
+                User user = userRepository.findByUserEmail(loginDto.getUserName())
                         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     
-                String token = jwtService.generateToken(loginDto.getUserEmail());
+                String token = jwtService.generateToken(loginDto.getUserName());
     
                 
                 return new LoginResponseDto(token, user.getUserName(), user.getUserEmail(), "Login successful");
